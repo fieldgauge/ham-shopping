@@ -1,0 +1,109 @@
+digraph R {
+
+  graph [
+    label="QRP shopping list (with links to shops)"
+    labelloc=t
+//    rankdir=LR
+    rankdir=TB
+ //   style=filled
+//    color=lightgrey
+    // connecting graphs, see https://stackoverflow.com/questions/2012036/graphviz-how-to-connect-subgraphs
+    compound=true
+  ]
+  node [
+//    shape=plaintext
+    style=filled
+    color=white
+    color=grey
+  ]
+
+
+  subgraph nocluster_existing {
+    node [color=gray95]
+    hfcable [label="coax cable\n(existing)"]
+    hfantenna [label="HF antenna\n(existing)"]
+    vhfantenna [label="VHF antenna\n(existing)"]
+    antennatuner [label="antenna tuner\n(existing)"]
+    qroradio [label="station radio\n(existing)"]
+    handheldcharger [label="handheld radio\ncharger (existing)"]
+    dclab [label="lab power supply\n(existing)"]
+    laptop [label="laptop computer\n(existing)"]
+    usbcharger [label="USB PD charger\n(existing)"]
+  }
+
+
+  subgraph nocluster_devices {
+    label="devices"
+    node [shape=box3d]
+    ic705 -> ic705holder
+    antennatuner
+    laptop
+    qroradio
+    handheldcharger
+  }
+
+
+  subgraph nocluster_data {
+    label="digital"
+    //node [color=green]
+    laptop ->
+    ic705datacable ->
+    ic705
+  }
+
+
+  subgraph nocluster_hf {
+    label="HF"
+    //node [color=blue]
+    ic705holder -> hfcable -> vhfantenna
+    ic705holder -> hfcable -> antennatuner -> hfantenna
+  }
+
+
+  subgraph cluster_dc {
+    label="DC"
+    //node [color=yellow]
+    battery ->
+    batterybox [label="fits?"]
+    dccableic705 -> {ic705 antennatuner}
+    batterybox -> dccablepp -> batterybox
+    dclab -> dccablebananapp -> dccablepp
+    dccablepp -> dccableic705
+    dccablepp -> dccableppmolex6 -> qroradio
+    dccablepp -> dccablepp55
+    dccablepp55 -> {handheldcharger ic705 antennatuner} [label="fits?"]
+    dccablepp55 -> handheldcharger [label="fits?"]
+    dccablepp55 -> handheldcharger [label="fits?"]
+    dccablepp55 -> usbcharger [label="fits?"]
+    usbcharger -> laptop
+    dccarpp -> dccablepp
+    dccharger -> dccablepp
+    dccablepp -> dcppmeter -> dcpp7
+    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+//    dcpp7 -> dccablepp
+  }
+
+
+  subgraph nocluster_buy {
+    ic705 [label="QRP radio\nIcom IC-705" URL="https://www.wimo.com/en/icom-ic-705"]
+    ic705holder [label="Holder for IC-705" URL="https://www.wimo.com/en/mba-705"]
+    dccableic705 [label="cable fused\npowerpole to 2x 5.5mm" URL="https://www.wimo.com/en/dc-cab705-tr"]
+    dccablebananapp [label="cable banana\nto powerpole" URL="https://www.wimo.com/en/powerpole-adapter-cable#?784=14050"]
+    dccablepp [label="cable powerpole\n60cm" URL="https://www.wimo.com/en/pp-ext-60cm"]
+    dccableppmolex6 [label="cable powerpole\nto Molex 6pin" URL="https://www.wimo.com/en/powerpole-adapter-cable#?784=14058"]
+    dccablepp55 [label="cable powerpole\nto 5.5mm" URL="https://www.wimo.com/en/powerpole-adapter-cable#?784=14053"]
+    dccarpp [label="adapter car\nto powerpole" URL="https://www.wimo.com/en/pp-cig"]
+    battery [label="Lithium battery 12V\n89,6Wh MLTX20HL" URL="https://www.motonet.fi/fi/tuote/901069/MTX-Energy-Litium-akku-12V-896Wh-MLTX20HL"]
+    batterybox [label="Battery Box\nMegaBox" URL="https://www.wimo.com/en/megabox-portable-battery-case"]
+    ic705datacable [label="USB Data Cable\nOPC_2418" URL="https://www.wimo.com/en/opc-2418"]
+    dccharger // TODO
+    dcpp7 [label="fuze panel\n7x powerpole" URL="https://www.wimo.com/en/pp-8split"]
+    dcppmeter [label="power meter\npowerpole" URL="https://www.wimo.com/en/rigrunner-wattmeter"]
+  }
+
+}
